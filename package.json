@@ -23,6 +23,7 @@
     "axios": "^0.21.1",
     "class-transformer": "^0.3.1",
     "class-validator": "^0.12.2",
+    "inversify": "^5.0.5",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-helmet": "^6.1.0",

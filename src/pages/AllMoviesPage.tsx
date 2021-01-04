@@ -1,11 +1,13 @@
 import Grid from '@material-ui/core/Grid';
-import { createStyles, makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 import Axios, { AxiosResponse } from 'axios';
 import { plainToClass } from 'class-transformer';
 import * as React from 'react';
 import { MoviePageList } from '../components/MoviePageList';
 import { Constants } from '../constants';
 import { MaxWidthContainer } from '../containers/MaxWidthContainer';
+import { useServiceContext } from '../contexts/hooks/useServiceContext';
+import { IServices } from '../contexts/interfaces/IServices';
 import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
 import { Movie } from '../models/Movie';
 import { IndexedMovies } from '../types/IndexedMovies';
@@ -17,14 +19,43 @@ const AllMoviesPage: React.FC = () => {
   const [indexedMovies, setIndexedMovies] = React.useState<IndexedMovies>(() => ({}));
   const [moreMoviesExist, setMoreMoviesExist] = React.useState<boolean>(() => false);
   const loadMoreMoviesRef: React.RefObject<HTMLDivElement> = React.createRef<HTMLDivElement>();
-  const classes = useStyles();
+  const { eventService }: IServices = useServiceContext();
 
+  // Set title in the main app header
+  React.useEffect(() => {
+
+    eventService.publishSyncEvent('headerLeftButtonAndTitleSetEvent', {
+      leftButton: undefined,
+      title: (
+        <Typography
+          component='h1'
+          variant='h6'
+          noWrap={true}>
+          {/* TODO: Localise content */}
+          Pop Movies
+        </Typography>
+      )
+    });
+
+    return () => {
+      eventService.publishSyncEvent('headerLeftButtonAndTitleSetEvent', {
+        leftButton: undefined,
+        title: undefined
+      });
+    };
+  }, [eventService]); // TODO: Add translator once localisation is implemented
+
+  // Fetch movies for the latest page index
   React.useEffect(() => {
     (async function getMovies(): Promise<void> {
       if (!isLoading && !indexedMovies[latestPageIndex]) {
         setIsLoading(true);
+        // TODO: Move hard-coded URL to config
+        // TODO: Move API call to MovieService that implements IMovieService interface
+        // TODO: Interact via IMovieService interface here
+        // TODO: Allow user to specify orderBy and orderByDir
         const moviesResponse: AxiosResponse = await Axios.request({
-          url: `http://localhost:3001/api/v1/movies?pageIndex=${latestPageIndex}&pageSize=${Constants.PAGE_SIZE}`,
+          url: `http://localhost:3001/api/v1/movies?pageIndex=${latestPageIndex}&pageSize=${Constants.PAGE_SIZE}&orderBy=rating&orderByDir=desc`,
           method: 'GET'
         });
         if (Array.isArray(moviesResponse.data?.items)) {
@@ -37,6 +68,7 @@ const AllMoviesPage: React.FC = () => {
     })();
   }, [isLoading, latestPageIndex, indexedMovies]);
 
+  // Lazy load movies for the next page when user scrolls to the bottom of the page
   useIntersectionObserver<HTMLDivElement>({
     ref: loadMoreMoviesRef,
     onIntersect: () => setLatestPageIndex((prevLatestPageIndex: number) => prevLatestPageIndex + 1),
@@ -45,8 +77,7 @@ const AllMoviesPage: React.FC = () => {
 
   return (
     <MaxWidthContainer
-      maxWidthBreakpoint='md'
-      contentClassName={classes.mainContent}>
+      maxWidthBreakpoint='md'>
       <Grid
         container={true}
         spacing={0}>
@@ -64,9 +95,3 @@ const AllMoviesPage: React.FC = () => {
 };
 
 export default AllMoviesPage;
-
-const useStyles = makeStyles(() => createStyles({
-  mainContent: {
-    padding: 0
-  }
-}));

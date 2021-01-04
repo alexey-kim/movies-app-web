@@ -18,6 +18,7 @@ export const Image: React.FC<IImageProps> = (props: IImageProps) => {
   const imageRef: React.RefObject<HTMLDivElement> = React.createRef<HTMLDivElement>();
   const classes = useStyles(props);
 
+  // Lazy load image only when the image becomes visible
   useIntersectionObserver<HTMLDivElement>({
     ref: imageRef,
     onIntersect: () => setIsVisible(true),

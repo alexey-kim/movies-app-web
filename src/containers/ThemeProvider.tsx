@@ -17,6 +17,7 @@ const breakpointValues: BreakpointValues = {
   xl: Constants.CSS_BREAKPOINTS.DESKTOP_REM
 };
 
+// Use rem units instead of px
 const commonThemeOptions: ThemeOptions = {
   palette: {
     primary: {
@@ -35,6 +36,85 @@ const commonThemeOptions: ThemeOptions = {
     toolbar: {}
   },
   overrides: {
+    MuiButton: {
+      root: {
+        padding: pxToRem(6, 16),
+        minWidth: pxToRem(64),
+        textTransform: 'inherit'
+      },
+      text: {
+        padding: pxToRem(6, 8)
+      },
+      outlined: {
+        padding: pxToRem(5, 15),
+        borderWidth: pxToRem(1),
+        '&$disabled': {
+          borderWidth: pxToRem(1)
+        }
+      },
+      outlinedPrimary: {
+        borderWidth: pxToRem(1),
+        '&:hover': {
+          borderWidth: pxToRem(1)
+        }
+      },
+      outlinedSecondary: {
+        borderWidth: pxToRem(1),
+        '&:hover': {
+          borderWidth: pxToRem(1)
+        },
+        '&$disabled': {
+          borderWidth: pxToRem(1)
+        }
+      },
+      textSizeSmall: {
+        padding: pxToRem(4, 5)
+      },
+      textSizeLarge: {
+        padding: pxToRem(8, 11)
+      },
+      outlinedSizeSmall: {
+        padding: pxToRem(3, 9)
+      },
+      outlinedSizeLarge: {
+        padding: pxToRem(7, 21)
+      },
+      containedSizeSmall: {
+        padding: pxToRem(4, 10)
+      },
+      containedSizeLarge: {
+        padding: pxToRem(8, 22)
+      },
+      startIcon: {
+        marginLeft: pxToRem(-4),
+        marginRight: pxToRem(8),
+        '&$iconSizeSmall': {
+          marginLeft: pxToRem(-2)
+        }
+      },
+      endIcon: {
+        marginLeft: pxToRem(8),
+        marginRight: pxToRem(-4),
+        '&$iconSizeSmall': {
+          marginRight: pxToRem(-2)
+        }
+      },
+      iconSizeSmall: {
+        '& > *:first-child': {
+          fontSize: pxToRem(18)
+        }
+      },
+      iconSizeMedium: {
+        '& > *:first-child': {
+          fontSize: pxToRem(20)
+        }
+      },
+      iconSizeLarge: {
+        '& > *:first-child': {
+          fontSize: pxToRem(22)
+        }
+      }
+    },
     MuiContainer: {
       fixed: {
         [`@media (min-width:${asRem(breakpointValues.sm)})`]: {
@@ -125,11 +205,6 @@ const commonThemeOptions: ThemeOptions = {
       }
     }
   },
-  props: {
-    MuiTypography: {
-      noWrap: true
-    }
-  },
   shadows: [
     'none',
     `${pxToRem(0, 2, 1, -1)} rgba(0,0,0,0.2), ${pxToRem(0, 1, 1, 0)} rgba(0,0,0,0.14), ${pxToRem(0, 1, 3, 0)} rgba(0,0,0,0.12)`,
@@ -172,6 +247,7 @@ const commonThemeOptions: ThemeOptions = {
 
 export const ThemeProvider: React.FC = ({ children }) => {
 
+  // Support light and dark themes
   const isDarkTheme: boolean = useMediaQuery('(prefers-color-scheme: dark)');
   const currentTheme: Theme = createMuiTheme({
     ...commonThemeOptions,

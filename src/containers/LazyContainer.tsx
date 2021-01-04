@@ -8,8 +8,8 @@ export interface ILazyContainerProps extends RouteComponentProps {
 
 export const LazyContainer: React.FC<ILazyContainerProps> = (props: ILazyContainerProps) => {
 
-  const { component: Component, path, default: defaultProp, location, navigate, uri } = props;
-  const componentProps = { path, default: defaultProp, location, navigate, uri };
+  const { component: Component, path, default: defaultProp, location, navigate, uri, ...otherProps } = props;
+  const componentProps = { path, default: defaultProp, location, navigate, uri, ...otherProps };
 
   return (
     <React.Suspense fallback={<Loading />}>

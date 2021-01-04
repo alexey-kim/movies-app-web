@@ -1,25 +1,25 @@
+import { Link } from '@reach/router';
 import * as React from 'react';
+import { Constants } from '../constants';
 import { Movie } from '../models/Movie';
-import { css } from '../utils/stylingUtils';
+import { getMovieDetailPageUrl } from '../utils/urlUtils';
 import { Image } from './primitives/Image';
 
 export interface IMovieViewProps {
-  readonly pageIndex: number;
-  readonly movieIndex: number;
   readonly movie: Movie;
 }
 
 export const MovieView: React.FC<IMovieViewProps> = (props: IMovieViewProps) => {
 
-  const { pageIndex, movieIndex, movie } = props;
+  const { movie } = props;
 
   return (
-    <div className={css(`page-${pageIndex} movie-${movieIndex}`)}>
+    <Link to={getMovieDetailPageUrl(movie.code)}>
       <Image
         altText={movie.title}
         pictureUrls={movie.pictureUrls}
-        aspectRatio={3 / 2}
+        aspectRatio={Constants.IMAGE_ASPECT_RATIO}
       />
-    </div>
+    </Link>
   );
 };

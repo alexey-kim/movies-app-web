@@ -1,3 +1,5 @@
+const CODE = 'code';
+
 export const Constants = {
   COLORS: {
     PRIMARY: '#212121',
@@ -20,9 +22,17 @@ export const Constants = {
   },
   /** 16px */
   CSS_PX_PER_REM: 16,
+  DI: {
+    EVENT_SERVICE: Symbol('EventService')
+  },
+  /** 3 / 2 aspect ratio */
+  IMAGE_ASPECT_RATIO: 1.5,
   PAGE_SIZE: 20,
+  ROUTE_PARAMS: {
+    CODE
+  },
   ROUTES: {
     ALL_MOVIES: '/',
-    MOVIE_DETAIL: '/'
+    MOVIE_DETAIL: `/movies/:${CODE}`
   }
 } as const;
